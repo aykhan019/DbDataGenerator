@@ -72,7 +72,7 @@ namespace DataGenerator
             {
                 var user = new User
                 {
-                    Id = Guid.NewGuid().ToString(),
+                    Id = "NEWID()",
                     UserName = usernames[i],
                     Email = $"{(new Faker().Random.Bool() ? $"{usernames[i].ToLower().Replace(" ", string.Empty)}{(faker.Random.Bool() ? faker.Random.Number(100, 999).ToString() : string.Empty)}" : $"{usernames[i].ToLower().Split(' ')[0]}{(faker.Random.Bool() ? faker.Name.LastName().ToLower() : string.Empty)}")}@{faker.Random.ArrayElement(EmailDomains)}",
                     PasswordHash = passwordHasher.HashPassword(faker.Internet.Password()),

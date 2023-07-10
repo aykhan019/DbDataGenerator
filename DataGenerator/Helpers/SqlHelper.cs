@@ -16,7 +16,7 @@ namespace DataGenerator.Helpers
             {
                 var user = HandleSingleQuotes(u);
                 var insertStatement = $"INSERT INTO Users (Id, UserName, Email, PasswordHash, PhoneNumber, ImageUrl, CoverImage, Birthday, Occupation, Birthplace, Gender, RelationshipStatus, BloodGroup, Website, SocialLink, Languages, AboutMe, EducationWork, Interests) " +
-                    $"VALUES ('{user.Id}', '{user.UserName}', '{user.Email}', '{user.PasswordHash}', '{user.PhoneNumber}', '{user.ImageUrl}', '{user.CoverImage}', '{user.Birthday}', '{user.Occupation}', '{user.Birthplace}', '{user.Gender}', '{user.RelationshipStatus}', '{user.BloodGroup}', " +
+                    $"VALUES ({user.Id}, '{user.UserName}', '{user.Email}', '{user.PasswordHash}', '{user.PhoneNumber}', '{user.ImageUrl}', '{user.CoverImage}', '{user.Birthday}', '{user.Occupation}', '{user.Birthplace}', '{user.Gender}', '{user.RelationshipStatus}', '{user.BloodGroup}', " +
                     $"'{user.Website}', '{user.SocialLink}', '{user.Languages}', '{user.AboutMe}', '{user.EducationWork}', '{user.Interests}');";
                 statements.Add(insertStatement + "\nGO");
             }
@@ -27,6 +27,7 @@ namespace DataGenerator.Helpers
         {
             return new User
             {
+                Id = "NEWID()",
                 UserName = user.UserName?.Replace("'", "''"),
                 Email = user.Email?.Replace("'", "''"),
                 PasswordHash = user.PasswordHash, // PasswordHash is an exception
