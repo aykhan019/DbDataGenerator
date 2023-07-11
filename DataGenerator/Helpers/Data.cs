@@ -65,7 +65,6 @@ namespace DataGenerator.Helpers
             var covers = FileHelper<string>
                          .GetDateFromTxtFile(Path.Combine(DataGenerator.Helpers.Constants.FilesFolder,
                                                           DataGenerator.Helpers.Constants.CoversFile));
-            int coverIndex = faker.Random.Int(0, covers.Count);
             var passwordHasher = new PasswordHasher();
 
             for (int i = 0; i < count; i++)
@@ -78,7 +77,7 @@ namespace DataGenerator.Helpers
                     PasswordHash = passwordHasher.HashPassword(usernames[i].Split(' ').ElementAt(0) + "123" + "-"),
                     PhoneNumber = faker.Phone.PhoneNumber(),
                     ImageUrl = faker.Internet.Avatar(),
-                    CoverImage = covers[coverIndex],
+                    CoverImage = faker.PickRandom(covers),
                     Birthday = faker.Date.Between(startDate, endDate).ToLongDateString(),
                     Occupation = faker.Name.JobTitle(),
                     Birthplace = faker.Address.City(),
