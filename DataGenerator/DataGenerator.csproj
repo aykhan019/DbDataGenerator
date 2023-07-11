@@ -65,7 +65,7 @@
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Username.cs" />
     <Compile Include="Helpers\Constants.cs" />
-    <Compile Include="Helpers\DataGenerator.cs" />
+    <Compile Include="Helpers\Data.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\SqlHelper.cs" />
     <Compile Include="Program.cs" />

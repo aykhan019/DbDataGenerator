@@ -75,7 +75,7 @@ namespace DataGenerator.Helpers
                     Id = Guid.NewGuid().ToString(),
                     UserName = usernames[i],
                     Email = $"{(new Faker().Random.Bool() ? $"{usernames[i].ToLower().Replace(" ", string.Empty)}{(faker.Random.Bool() ? faker.Random.Number(100, 999).ToString() : string.Empty)}" : $"{usernames[i].ToLower().Split(' ')[0]}{(faker.Random.Bool() ? faker.Name.LastName().ToLower() : string.Empty)}")}@{faker.Random.ArrayElement(EmailDomains)}",
-                    PasswordHash = passwordHasher.HashPassword(usernames[i] + "123" + "-"),
+                    PasswordHash = passwordHasher.HashPassword(usernames[i].Split(' ').ElementAt(0) + "123" + "-"),
                     PhoneNumber = faker.Phone.PhoneNumber(),
                     ImageUrl = faker.Internet.Avatar(),
                     CoverImage = covers[coverIndex],
