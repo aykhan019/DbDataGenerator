@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Zust.Entities.Models;
 
 namespace DataGenerator.Helpers
@@ -12,13 +9,14 @@ namespace DataGenerator.Helpers
         public static string[] GenerateInsertStatements(List<User> users)
         {
             var statements = new List<string>();
-            foreach (var u in users)
+            foreach (var user in users)
             {
-                var user = HandleSingleQuotes(u);
-                var insertStatement = $"INSERT INTO Users (Id, UserName, Email, PasswordHash, PhoneNumber, ImageUrl, CoverImage, Birthday, Occupation, Birthplace, Gender, RelationshipStatus, BloodGroup, Website, SocialLink, Languages, AboutMe, EducationWork, Interests) " +
-                    $"VALUES ({user.Id}, '{user.UserName}', '{user.Email}', '{user.PasswordHash}', '{user.PhoneNumber}', '{user.ImageUrl}', '{user.CoverImage}', '{user.Birthday}', '{user.Occupation}', '{user.Birthplace}', '{user.Gender}', '{user.RelationshipStatus}', '{user.BloodGroup}', " +
-                    $"'{user.Website}', '{user.SocialLink}', '{user.Languages}', '{user.AboutMe}', '{user.EducationWork}', '{user.Interests}');";
-                statements.Add(insertStatement + "\nGO");
+                var handledUser = HandleSingleQuotes(user);
+                var insertStatement = $"INSERT INTO AspNetUsers (Id, UserName, NormalizedUserName, Email, NormalizedEmail, PasswordHash, PhoneNumber, ImageUrl, CoverImage, Birthday, Occupation, Birthplace, Gender, RelationshipStatus, BloodGroup, Website, SocialLink, Languages, AboutMe, EducationWork, Interests, EmailConfirmed, PhoneNumberConfirmed, TwoFactorEnabled, LockoutEnabled, AccessFailedCount) " +
+                    $"VALUES ('{Guid.NewGuid()}', '{handledUser.UserName}', '{handledUser.UserName.ToUpper()}', '{handledUser.Email}', '{handledUser.Email.ToUpper()}', '{handledUser.PasswordHash}', '{handledUser.PhoneNumber}', '{handledUser.ImageUrl}', '{handledUser.CoverImage}', '{handledUser.Birthday}', " +
+                    $"'{handledUser.Occupation}', '{handledUser.Birthplace}', '{handledUser.Gender}', '{handledUser.RelationshipStatus}', '{handledUser.BloodGroup}', '{handledUser.Website}', '{handledUser.SocialLink}', '{handledUser.Languages}', '{handledUser.AboutMe}', '{handledUser.EducationWork}', '{handledUser.Interests}', " +
+                    $"0, 0, 0, 0, 0);";
+                statements.Add(insertStatement);
             }
             return statements.ToArray();
         }
@@ -27,10 +25,10 @@ namespace DataGenerator.Helpers
         {
             return new User
             {
-                Id = "NEWID()",
+                Id = user.Id,
                 UserName = user.UserName?.Replace("'", "''"),
                 Email = user.Email?.Replace("'", "''"),
-                PasswordHash = user.PasswordHash, // PasswordHash is an exception
+                PasswordHash = user.PasswordHash,
                 PhoneNumber = user.PhoneNumber?.Replace("'", "''"),
                 ImageUrl = user.ImageUrl?.Replace("'", "''"),
                 CoverImage = user.CoverImage?.Replace("'", "''"),
