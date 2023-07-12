@@ -63,7 +63,7 @@ namespace DataGenerator.Helpers
             int numLanguages = faker.Random.Int(1, 4);
             int numInterests = faker.Random.Int(1, 6);
             var covers = FileHelper<string>
-                         .GetDateFromTxtFile(Path.Combine(DataGenerator.Helpers.Constants.FilesFolder,
+                         .GetDataFromTxtFile(Path.Combine(DataGenerator.Helpers.Constants.FilesFolder,
                                                           DataGenerator.Helpers.Constants.CoversFile));
             var passwordHasher = new PasswordHasher();
 

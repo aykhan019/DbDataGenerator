@@ -22,7 +22,7 @@ namespace DataGenerator.Helpers
             return data;
         }
 
-        public static List<string> GetDateFromTxtFile(string path)
+        public static List<string> GetDataFromTxtFile(string path)
         {
             // Read all lines from the text file
             var lines = File.ReadAllLines(path);
