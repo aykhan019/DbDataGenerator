@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DataGenerator.Entities;
+using System;
 using System.Collections.Generic;
 using Zust.Entities.Models;
 
@@ -19,6 +20,27 @@ namespace DataGenerator.Helpers
                 statements.Add(insertStatement);
             }
             return statements.ToArray();
+        }
+
+        public static string[] GenerateInsertStatements(List<Post> posts)
+        {
+            var statements = new List<string>();
+            foreach (var post in posts)
+            {
+                var handledPost = HandleSingleQuotes(post);
+                var insertStatement = $"INSERT INTO Posts (Id, Description, HasMediaContent, ContentUrl, IsVideo, CreatedAt, UserId) " +
+                    $"VALUES ('{Guid.NewGuid()}', '{handledPost.Description}', '{handledPost.HasMediaContent}', '{handledPost.ContentUrl}', '{handledPost.IsVideo}', '{handledPost.CreatedAt}', '{handledPost.UserId}');";
+                statements.Add(insertStatement);
+            }
+            return statements.ToArray();
+        }
+
+        public static string GenerateInsertSqlStatement(Post post)
+        {
+            var handledPost = HandleSingleQuotes(post);
+            var insertStatement = $"INSERT INTO Posts (Id, Description, HasMediaContent, ContentUrl, IsVideo, CreatedAt, UserId) " +
+                $"VALUES ('{Guid.NewGuid()}', '{handledPost.Description}', '{handledPost.HasMediaContent}', '{handledPost.ContentUrl}', '{handledPost.IsVideo}', '{handledPost.CreatedAt}', '{handledPost.UserId}');";
+            return insertStatement;
         }
 
         private static User HandleSingleQuotes(User user)
@@ -44,6 +66,20 @@ namespace DataGenerator.Helpers
                 AboutMe = user.AboutMe?.Replace("'", "''"),
                 EducationWork = user.EducationWork?.Replace("'", "''"),
                 Interests = user.Interests?.Replace("'", "''")
+            };
+        }
+
+        private static Post HandleSingleQuotes(Post post)
+        {
+            return new Post
+            {
+                Id = post.Id,
+                Description = post.Description?.Replace("'", "''"),
+                HasMediaContent = post.HasMediaContent,
+                ContentUrl = post.ContentUrl?.Replace("'", "''"),
+                IsVideo = post.IsVideo,
+                CreatedAt = post.CreatedAt,
+                UserId = post.UserId,
             };
         }
     }

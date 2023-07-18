@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Bogus;
 using DataGenerator.Entities;
 using DataGenerator.Helpers;
+using DataGenerator.Services;
 using Microsoft.AspNet.Identity;
 using Zust.Entities.Models;
 
@@ -95,5 +96,60 @@ namespace DataGenerator.Helpers
             }
             return users;
         }
+
+        //public static async void GenerateBogusPosts()
+        //{
+        //    const int postCount = 1000;
+        //    var resultFilePath = Path.Combine(DataGenerator.Helpers.Constants.FilesFolder, DataGenerator.Helpers.Constants.ResultFile);
+
+        //    // Show loading message before getting users' data
+        //    Console.WriteLine("Generating posts' data...");
+        //    var posts = await GetPostData(postCount);
+        //    Console.WriteLine("Posts' data generated successfully!");
+
+        //    // Show loading message before generating insert statements
+        //    Console.WriteLine("Generating insert statements...");
+        //    var statements = SqlHelper.GenerateInsertStatements(posts);
+        //    Console.WriteLine("Insert statements generated successfully!");
+
+        //    // Show loading message before writing to the file
+        //    Console.WriteLine("Writing insert statements to file...");
+        //    FileHelper<string>.WriteToFile(resultFilePath, statements);
+        //    Console.WriteLine("Insert statements written to file successfully!");
+        //    Console.WriteLine("File Path " + Path.GetFullPath(resultFilePath));
+
+        //    // Show completion message
+        //    Console.WriteLine("Process completed!");
+        //}
+
+        //private static async Task<List<Post>> GetPostData(int numberOfPosts)
+        //{
+        //    var faker = new Faker();
+
+        //    var posts = new List<Post>();
+
+        //    var images = await PostDataService.GetPostImagesFromLoremFlickr(numberOfPosts);
+
+        //    var path = Path.Combine(DataGenerator.Helpers.Constants.FilesFolder, DataGenerator.Helpers.Constants.UserIdsFile);
+        //    var ids = FileHelper<string>.GetDataFromTxtFile(path);
+
+        //    for (int i = 0; i < numberOfPosts; i++)
+        //    {
+        //        var post = new Post
+        //        {
+        //            Id = Guid.NewGuid().ToString(),
+        //            Description = faker.Lorem.Sentences(),
+        //            HasMediaContent = true,
+        //            ContentUrl = images[i],
+        //            IsVideo = false,
+        //            CreatedAt = faker.Date.Past(),
+        //            UserId = faker.PickRandom(ids)
+        //        };
+
+        //        posts.Add(post);
+        //    }
+
+        //    return posts;
+        //}
     }
 }

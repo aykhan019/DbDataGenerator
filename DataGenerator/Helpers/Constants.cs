@@ -17,5 +17,7 @@ namespace DataGenerator.Helpers
         public const string CoversFile = "covers.txt";
 
         public const string ResultFile = "result.txt";
+
+        public const string UserIdsFile = "userIds.txt";
     }
 }

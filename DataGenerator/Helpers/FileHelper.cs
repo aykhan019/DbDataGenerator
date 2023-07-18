@@ -40,5 +40,13 @@ namespace DataGenerator.Helpers
                 }
             }
         }
+
+        public static void AppendTextToFile(string filePath, string text)
+        {
+            using (StreamWriter sw = File.AppendText(filePath))
+            {
+                sw.WriteLine(text);
+            }
+        }
     }
 }

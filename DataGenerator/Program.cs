@@ -1,4 +1,7 @@
-﻿using DataGenerator.Helpers;
+﻿using System;
+using System.Globalization;
+using DataGenerator.Helpers;
+using DataGenerator.Services;
 
 namespace DataGenerator
 {
@@ -6,7 +9,29 @@ namespace DataGenerator
     {
         static void Main()
         {
-            Data.GenerateUserData();
+            try
+            {
+                //Data.GenerateUserData();
+                //Data.GenerateBogusPosts();
+                Call();
+                Console.ReadLine();
+                Console.ReadLine();
+                Console.ReadLine();
+                Console.ReadLine();
+                Console.ReadLine();
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(ex.Message);
+                throw;
+            }
+        }
+
+        private static async void Call()
+        {
+            await PostDataService.GeneratePostData(1000);
         }
     }
 }
