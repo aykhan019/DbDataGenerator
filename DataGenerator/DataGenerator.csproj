@@ -78,7 +78,9 @@
     <Compile Include="Entities\Username.cs" />
     <Compile Include="Helpers\Constants.cs" />
     <Compile Include="Helpers\Data.cs" />
+    <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
+    <Compile Include="Helpers\LikeGenerator.cs" />
     <Compile Include="Helpers\SqlHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,12 +90,21 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="Files\emails.json" />
+    <None Include="Files\results.json" />
     <None Include="Files\usernames.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\covers.txt" />
+    <Content Include="Files\notifications.txt" />
+    <Content Include="Files\friendrequests.txt" />
+    <Content Include="Files\friendships.txt" />
+    <Content Include="Files\images.txt" />
+    <Content Include="Files\postsIds.txt" />
+    <Content Include="Files\result.txt" />
+    <Content Include="Files\results.txt" />
     <Content Include="Files\userIds.txt" />
+    <Content Include="Files\usersIds2.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

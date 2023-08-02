@@ -44,18 +44,19 @@ namespace DataGenerator.Services
             var path = Path.Combine(DataGenerator.Helpers.Constants.FilesFolder, DataGenerator.Helpers.Constants.UserIdsFile);
             var resultPath = Path.Combine(DataGenerator.Helpers.Constants.FilesFolder, DataGenerator.Helpers.Constants.ResultFile);
             var ids = FileHelper<string>.GetDataFromTxtFile(path);
+            var images = FileHelper<string>.GetDataFromTxtFile(Path.Combine(DataGenerator.Helpers.Constants.FilesFolder, "images.txt"));
 
             for (int i = 0; i < numberOfPosts; i++)
             {
-                var imageResponse = await _httpClient.GetAsync("https://loremflickr.com/320/240/random");
+                Console.WriteLine("Image URL : " + images[i]);
 
-                var imageData = imageResponse.RequestMessage.RequestUri.ToString();
+                await Console.Out.WriteAsync($"Uploading image ");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                await Console.Out.WriteAsync(i.ToString() + " ");
+                Console.ResetColor();
+                await Console.Out.WriteLineAsync($"to cloudinary");
 
-                Console.WriteLine("Image URL : " + imageData);
-
-                await Console.Out.WriteLineAsync($"Uploading image {i} to cloudinary");
-
-                var uploadResult = await UploadImageToCloudinary(imageData);
+                var uploadResult = await UploadImageToCloudinary(images[i]);
 
                 Console.ForegroundColor = ConsoleColor.Green;
 

@@ -48,5 +48,22 @@ namespace DataGenerator.Helpers
                 sw.WriteLine(text);
             }
         }
+
+        public static List<T> Deserialize(string filename)
+        {
+            List<T> values = new List<T>();
+
+            var serializer = new JsonSerializer();
+
+            using (var sr = new StreamReader(filename))
+            {
+                using (var jr = new JsonTextReader(sr))
+                {
+                    values = serializer.Deserialize<List<T>>(jr);
+                }
+            }
+
+            return values;
+        }
     }
 }

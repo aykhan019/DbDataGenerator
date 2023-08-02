@@ -151,5 +151,178 @@ namespace DataGenerator.Helpers
 
         //    return posts;
         //}
+
+      
+
+
+        public static async Task GenerateRandomDataSQL()
+        {
+            var random = new Random();
+
+            var list = FileHelper<User>.Deserialize(Path.Combine(Constants.FilesFolder, "results.json"));
+            Console.WriteLine(list.Count);
+
+            //var sqlStatements = new List<string>();
+
+            foreach (var user in list)
+            {
+                var allUsers = list.Where(u => u.Id != user.Id).ToList();
+                var userCount = random.Next(0, allUsers.Count() / 4);
+                Console.WriteLine(userCount);
+                var pendingRequestCount = (int)(userCount * 0.07);
+                var friendCount = userCount - pendingRequestCount;
+
+                var users = allUsers.ToList().GetRandomElements(userCount);
+
+                var friendshipsFile = Path.Combine(Constants.FilesFolder, "friendships.txt");
+                var friendrequestsFile = Path.Combine(Constants.FilesFolder, "friendrequests.txt");
+                var notificationsFile = Path.Combine(Constants.FilesFolder, "notifications.txt");
+
+                for (int i = 0; i < friendCount; i++)
+                {
+                    var friendToSendRequest = users[i];
+
+                    var requestDate = GenerateRandomDate(new DateTime(2023, 1, 1));
+
+                    var friendRequestId = Guid.NewGuid().ToString();
+                    var frSql = $"INSERT INTO FriendRequest (Id, SenderId, ReceiverId, RequestDate, Status) " +
+                        $"VALUES ('{friendRequestId}', '{user.Id}', '{friendToSendRequest.Id}', '{requestDate}', 'Accepted');";
+                    FileHelper<string>.AppendTextToFile(friendrequestsFile, "GO");
+                    FileHelper<string>.AppendTextToFile(friendrequestsFile, frSql);
+                    //sqlStatements.Add(frSql);
+
+                    var ntfcId = Guid.NewGuid().ToString();
+                    var ntfcSql = $"INSERT INTO Notifications (Id, Date, IsRead, FromUserId, ToUserId, Message) " +
+                        $"VALUES ('{ntfcId}', '{requestDate}', 'true', '{user.Id}', '{friendToSendRequest.Id}', " +
+                        $"'{NotificationType.GetNewFriendRequestMessage(user.UserName)}');";
+                    FileHelper<string>.AppendTextToFile(notificationsFile, "GO");
+                    FileHelper<string>.AppendTextToFile(notificationsFile, ntfcSql);
+                    //sqlStatements.Add(ntfcSql);
+
+                    var friendshipId = Guid.NewGuid().ToString();
+                    var friendshipSql = $"INSERT INTO Friendships (FriendshipId, FriendId, UserId) " +
+                        $"VALUES ('{friendshipId}', '{friendToSendRequest.Id}', '{user.Id}');";
+                    FileHelper<string>.AppendTextToFile(friendshipsFile, "GO");
+                    FileHelper<string>.AppendTextToFile(friendshipsFile, friendshipSql);
+                    //sqlStatements.Add(friendshipSql);
+
+                    var ntfc2Id = Guid.NewGuid().ToString();
+                    var ntfc2Sql = $"INSERT INTO Notifications (Id, Date, IsRead, FromUserId, ToUserId, Message) " +
+                        $"VALUES ('{ntfc2Id}', '{requestDate.AddDays(random.Next(35))}', 'true', '{friendToSendRequest.Id}', '{user.Id}', " +
+                        $"'{NotificationType.GetFriendRequestAcceptedMessage(friendToSendRequest.UserName)}');";
+                    FileHelper<string>.AppendTextToFile(notificationsFile, "GO");
+                    FileHelper<string>.AppendTextToFile(notificationsFile, ntfc2Sql);
+                    //sqlStatements.Add(ntfc2Sql);
+                }
+
+                for (int i = 0; i < pendingRequestCount; i++)
+                {
+                    var friendToSendRequest = users[i + friendCount];
+
+                    var requestDate = GenerateRandomDate(new DateTime(2023, 1, 1));
+
+                    var friendRequestId = Guid.NewGuid().ToString();
+                    var frSql = $"INSERT INTO FriendRequest (Id, SenderId, ReceiverId, RequestDate, Status) " +
+                        $"VALUES ('{friendRequestId}', '{user.Id}', '{friendToSendRequest.Id}', '{requestDate}', 'Pending');";
+                    FileHelper<string>.AppendTextToFile(friendrequestsFile, "GO");
+                    FileHelper<string>.AppendTextToFile(friendrequestsFile, frSql);
+
+                    var ntfcId = Guid.NewGuid().ToString();
+                    var ntfcSql = $"INSERT INTO Notifications (Id, Date, IsRead, FromUserId, ToUserId, Message) " +
+                        $"VALUES ('{ntfcId}', '{requestDate}', 'true', '{user.Id}', '{friendToSendRequest.Id}', " +
+                        $"'{NotificationType.GetNewFriendRequestMessage(user.UserName)}');";
+                    FileHelper<string>.AppendTextToFile(notificationsFile, "GO");
+                    FileHelper<string>.AppendTextToFile(notificationsFile, ntfcSql);
+                }
+            }
+
+            // Combine all SQL statements into a single string
+            //var sqlString = string.Join(Environment.NewLine, sqlStatements);
+
+            await Console.Out.WriteLineAsync("DONE");
+        }
+
+        private static DateTime GenerateRandomDate(DateTime startDate)
+        {
+            DateTime endDate = DateTime.Today;
+            Random random = new Random();
+            int range = (endDate - startDate).Days;
+
+            return startDate.AddDays(random.Next(range));
+        }
+
+    }
+
+    internal class NotificationType
+    {
+        /// <summary>
+        /// Generates a notification message for a new friend request.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetNewFriendRequestMessage(string username)
+        {
+            return $"You have received a friend request from {username}!";
+        }
+
+        /// <summary>
+        /// Generates a notification message for a friend request being accepted.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetFriendRequestAcceptedMessage(string username)
+        {
+            return $"{username} accepted your friend request!";
+        }
+
+        /// <summary>
+        /// Generates a notification message for a friend request being declined.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetFriendRequestDeclinedMessage(string username)
+        {
+            return $"{username} declined your friend request!";
+        }
+
+        /// <summary>
+        /// Generates a notification message for someone liking your post.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetLikedYourPostMessage(string username)
+        {
+            return $"{username} liked your post!";
+        }
+
+        /// <summary>
+        /// Generates a notification message for someone commenting on your post.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetCommentedOnYourPostMessage(string username)
+        {
+            return $"{username} commented on your post!";
+        }
+
+        /// <summary>
+        /// Generates a notification message for someone sending you a message.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetSentYouMessageMessage(string username)
+        {
+            return $"{username} sent you a message!";
+        }
+
+        /// <summary>
+        /// Generates a notification message for someone sharing a post.
+        /// </summary>
+        /// <param name="username">The username of the sender.</param>
+        /// <returns>The notification message.</returns>
+        public static string GetSharedPostMessage(string username)
+        {
+            return $"{username} shared a post!";
+        }
     }
 }
